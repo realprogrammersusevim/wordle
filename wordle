@@ -1,13 +1,22 @@
+#!/usr/bin/env python3
+
+import argparse
 import random
 from enum import Enum
+
+parser = argparse.ArgumentParser(description="Wordle solver")
+parser.add_argument("-r", "--random", action="store_true", help="Use a random word")
+parser.add_argument(
+    "-o", "--outside", action="store_true", help="Use an outside guesser"
+)
+args = parser.parse_args()
 
 with open("data/words_alpha.txt") as f:
     words = f.read().splitlines()
 
-random.shuffle(words)
-
 # Filter words with 5 characters
 words = [word for word in words if len(word) == 5]
+random.shuffle(words)
 
 
 def not_in_word(letter, words):
@@ -31,9 +40,15 @@ def in_word_not_at_position(letter, position, words):
     return [word for word in words if word[position] != letter]
 
 
-def get_guess():
+def get_input(secret: bool):
     while True:
-        guess = input("Enter a 5-letter word: ").lower()
+        if secret:
+            guess = input("Enter a secret word: ")
+            print("\033[A                             \033[A")
+        else:
+            guess = input("Enter a guess: ")
+
+        guess = guess.lower()
 
         if len(guess) != 5:
             print("Word must be 5 letters long stupid")
@@ -73,8 +88,11 @@ class Letter:
 
 guesses = []
 
-secret_word = random.choice(words)
-# print("Secret word:", secret_word)
+# Let the user put in a secret word
+if args.random == True or args.outside == True:
+    secret_word = random.choice(words)
+else:
+    secret_word = get_input(True)
 
 
 def display_guess(guess):
@@ -89,25 +107,37 @@ def display_guess(guess):
 
 
 for i in range(0, 6):
-    print(f"Guess {i}")
-    guess_word = get_guess()
-
-    if guess_word == secret_word:
-        print("You win!")
-        break
-
+    print(f"Guess {i + 1}")
+    guess_word = get_input(False)
     guess = []
 
-    for li, letter in enumerate(guess_word):
-        curr_letter = Letter(letter)
-        if secret_word[li] == letter:
-            curr_letter.state = LetterState.IN_WORD_AT_POSITION
-        elif letter in secret_word:
-            curr_letter.state = LetterState.IN_WORD_NOT_AT_POSITION
-        else:
-            curr_letter.state = LetterState.NOT_IN_WORD
+    if args.outside == True:
+        guess_output = input("Enter guess result: ")
+        # 1 = not in word, 2 = in word at position, 3 = in word not at position
+        for li, letter in enumerate(guess_output):
+            curr_letter = Letter(guess_word[li])
+            if letter == "1":
+                curr_letter.state = LetterState.NOT_IN_WORD
+            elif letter == "2":
+                curr_letter.state = LetterState.IN_WORD_AT_POSITION
+            else:
+                curr_letter.state = LetterState.IN_WORD_NOT_AT_POSITION
+            guess.append(curr_letter)
+    else:
+        if guess_word == secret_word:
+            print("You win!")
+            break
 
-        guess.append(curr_letter)
+        for li, letter in enumerate(guess_word):
+            curr_letter = Letter(letter)
+            if secret_word[li] == letter:
+                curr_letter.state = LetterState.IN_WORD_AT_POSITION
+            elif letter in secret_word:
+                curr_letter.state = LetterState.IN_WORD_NOT_AT_POSITION
+            else:
+                curr_letter.state = LetterState.NOT_IN_WORD
+
+            guess.append(curr_letter)
 
     # Remove words that don't have the guessed letter at the guessed position
     for li, letter in enumerate(guess):
@@ -127,3 +157,5 @@ for i in range(0, 6):
         print("Words:", words[:20])
     else:
         print("Words:", words)
+
+    random.shuffle(words)
