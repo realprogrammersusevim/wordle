@@ -9,6 +9,7 @@ parser.add_argument("-r", "--random", action="store_true", help="Use a random wo
 parser.add_argument(
     "-o", "--outside", action="store_true", help="Use an outside guesser"
 )
+parser.add_argument("-n", "--number", help="Maximum number of suggestions to show")
 args = parser.parse_args()
 
 with open("data/words_alpha.txt") as f:
@@ -106,6 +107,8 @@ def display_guess(guess):
     print()
 
 
+won = False
+
 for i in range(0, 6):
     print(f"Guess {i + 1}")
     guess_word = get_input(False)
@@ -126,6 +129,7 @@ for i in range(0, 6):
     else:
         if guess_word == secret_word:
             print("You win!")
+            won = True
             break
 
         for li, letter in enumerate(guess_word):
@@ -148,6 +152,8 @@ for i in range(0, 6):
         else:
             words = not_in_word(letter.letter, words)
 
+    # Special states
+
     guesses.append(guess)
     print("Guesses:")
     for guess in guesses:
@@ -159,3 +165,7 @@ for i in range(0, 6):
         print("Words:", words)
 
     random.shuffle(words)
+
+if not won and args.outside == False:
+    print("You lose!")
+    print("The secret word was:", secret_word)
