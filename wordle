@@ -60,7 +60,7 @@ def get_input(secret: bool):
         elif guess in guesses:
             print("You already guessed that word")
             continue
-        elif guess.isalpha() == False:
+        elif not guess.isalpha():
             print("Word must be alphabetic")
             continue
         else:
@@ -90,7 +90,7 @@ class Letter:
 guesses = []
 
 # Let the user put in a secret word
-if args.random == True or args.outside == True:
+if args.random or args.outside:
     secret_word = random.choice(words)
 else:
     secret_word = get_input(True)
@@ -114,7 +114,7 @@ for i in range(0, 6):
     guess_word = get_input(False)
     guess = []
 
-    if args.outside == True:
+    if args.outside:
         guess_output = input("Enter guess result: ")
         # 1 = not in word, 2 = in word at position, 3 = in word not at position
         for li, letter in enumerate(guess_output):
@@ -166,6 +166,6 @@ for i in range(0, 6):
 
     random.shuffle(words)
 
-if not won and args.outside == False:
+if not won and not args.outside:
     print("You lose!")
     print("The secret word was:", secret_word)
