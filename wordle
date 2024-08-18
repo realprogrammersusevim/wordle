@@ -19,10 +19,10 @@ parser.add_argument(
 args = parser.parse_args()
 
 with open("data/words_alpha.txt") as f:
-    words = f.read().splitlines()
+    original_words = f.read().splitlines()
 
 # Filter words with 5 characters
-words = [word for word in words if len(word) == 5]
+words = [word for word in original_words if len(word) == 5]
 random.shuffle(words)
 
 
@@ -57,20 +57,14 @@ def get_input(secret: bool):
 
         guess = guess.lower()
 
-        # Allow words that aren't the answer if we're not showing suggestions
-        if not args.suggestions:
-            if guess not in words:
-                print("Word is not in the dictionary")
-                continue
-
         if len(guess) != 5:
             print("Word must be 5 letters long stupid")
             continue
         elif guess in guesses:
             print("You already guessed that word")
             continue
-        elif not guess.isalpha():
-            print("Word must be alphabetic")
+        elif guess not in original_words:
+            print("Not a valid word")
             continue
         else:
             break
