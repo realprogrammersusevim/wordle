@@ -10,6 +10,12 @@ parser.add_argument(
     "-o", "--outside", action="store_true", help="Use an outside guesser"
 )
 parser.add_argument("-n", "--number", help="Maximum number of suggestions to show")
+parser.add_argument(
+    "-s",
+    "--suggestions",
+    action="store_true",
+    help="Hide the remaining word suggestions",
+)
 args = parser.parse_args()
 
 with open("data/words_alpha.txt") as f:
@@ -51,11 +57,14 @@ def get_input(secret: bool):
 
         guess = guess.lower()
 
+        # Allow words that aren't the answer if we're not showing suggestions
+        if not args.suggestions:
+            if guess not in words:
+                print("Word is not in the dictionary")
+                continue
+
         if len(guess) != 5:
             print("Word must be 5 letters long stupid")
-            continue
-        elif guess not in words:
-            print("Word is not in the dictionary")
             continue
         elif guess in guesses:
             print("You already guessed that word")
@@ -159,12 +168,13 @@ for i in range(0, 6):
     for guess in guesses:
         display_guess(guess)
     print("Words left:", len(words))
-    if len(words) > 50:
-        print("Words:", words[:20])
-    else:
-        print("Words:", words)
+    if not args.suggestions:
+        if len(words) > 50:
+            print("Words:", words[:20])
+        else:
+            print("Words:", words)
 
-    random.shuffle(words)
+        random.shuffle(words)
 
 if not won and not args.outside:
     print("You lose!")
