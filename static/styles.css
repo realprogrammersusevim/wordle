@@ -1,0 +1,146 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    color: #333;
+}
+
+.instructions {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.color-legend div {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    border: 1px solid #ccc;
+    vertical-align: middle;
+}
+.color-legend span {
+    margin-right: 15px;
+}
+.legend-correct-position { background-color: #6aaa64; }
+.legend-correct-letter { background-color: #c9b458; }
+.legend-incorrect-letter { background-color: #787c7e; }
+
+
+.game-controls {
+    margin-bottom: 20px;
+}
+
+.game-controls button,
+.guess-input-area button {
+    padding: 10px 15px;
+    font-size: 1em;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #5cb85c;
+    color: white;
+}
+
+.game-controls button:hover,
+.guess-input-area button:hover {
+    opacity: 0.9;
+}
+
+.guess-input-area {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.guess-input-area input[type="text"] {
+    padding: 10px;
+    font-size: 1.2em;
+    text-transform: uppercase;
+    width: 150px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+#guessesContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.guess-row {
+    display: flex;
+    margin-bottom: 5px;
+}
+
+.letter-box {
+    width: 50px;
+    height: 50px;
+    border: 2px solid #d3d6da; /* Light gray border */
+    margin-right: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #333; /* Default text color before guess */
+    background-color: white; /* Default background */
+}
+
+.letter-box:last-child {
+    margin-right: 0;
+}
+
+/* States for letter boxes */
+.correct-position {
+    background-color: #6aaa64; /* Green */
+    color: white;
+    border-color: #6aaa64;
+}
+
+.in-word-wrong-position { /* Yellow */
+    background-color: #c9b458;
+    color: white;
+    border-color: #c9b458;
+}
+
+.not-in-word { /* Gray */
+    background-color: #787c7e;
+    color: white;
+    border-color: #787c7e;
+}
+
+#messageArea {
+    font-size: 1.1em;
+    color: #d9534f; /* Red for errors/important messages */
+    min-height: 20px;
+}
+
+#remainingWords, #suggestionsArea {
+    font-size: 0.9em;
+    color: #555;
+    margin-top: 10px;
+}
+
+#suggestionsArea button {
+    background-color: #f0ad4e;
+    color: white;
+    margin: 2px;
+    padding: 5px 10px;
+    font-size: 0.9em;
+}
+#suggestionsArea button:hover {
+    background-color: #ec971f;
+}
